@@ -28,23 +28,17 @@ def find_order(x: int, n: int) -> int | None:
     Returns:
         int: The order of x modulo n.
     """
-    print("Allocating resources...")
     l: int = n.bit_length()
     t: int = 2 * l + 3
     process: Process = Process()
     exponent: Quant = process.alloc(t)
     target: Quant = process.alloc(l)
 
-    print("Applying Hadamard gates")
     H(exponent)
-    print("Applying XOR oracle")
     xor_oracle(lambda e: pow(x, e, n))(exponent, target)
-    print("Measuring target")
     _ = measure(target)
-    print("Applying QFT")
     QFT(exponent)
-    print("Measuring exponent")
-    return round(1 / measure(exponent).get())
+    return measure(exponent).value
 
 def is_perfect_power(n: int) -> int | None:
     """Checks if n is a perfect power.
@@ -105,7 +99,7 @@ def shor(n: int, max_attempts: int = 100) -> int:
 
 def main() -> None:
     large_num: int = int(input("Enter large integer to factor: "))
-    factor: int = shor(large_num, 1)
+    factor: int = shor(large_num, 5)
     print(f"Shor's algorithm found a factor: {factor}")
     print(f"{large_num} = {factor} * {large_num // factor} is {large_num % factor == 0},")
     print(
