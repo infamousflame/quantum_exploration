@@ -23,7 +23,6 @@ def find_order(x: int, n: int) -> int | None:
     """
     for i in range(2, n):
         if pow(x, i, n) == 1:
-            print(f"Classical order found: {x}^{i} mod {n} = 1, which is {pow(x, i, n) == 1}.")
             return i
     return None
 
