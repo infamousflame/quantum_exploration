@@ -189,3 +189,7 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,linux
+
+
+# IBM Cloud API keys
+apikey.json
