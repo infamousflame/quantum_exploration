@@ -23,6 +23,7 @@ def find_order(x: int, n: int) -> int | None:
     """
     for i in range(2, n):
         if pow(x, i, n) == 1:
+            print(f"Classical order found: {x}^{i} mod {n} = 1, which is {pow(x, i, n) == 1}.")
             return i
     return None
 
@@ -86,7 +87,7 @@ def shor(n: int, max_attempts: int = 100) -> int:
 
 def main() -> None:
     large_num: int = int(input("Enter large integer to factor: "))
-    factor: int = shor(large_num, 1)
+    factor: int = shor(large_num, 5)
     print(f"Shor's algorithm found a factor: {factor}")
     print(f"{large_num} = {factor} * {large_num // factor} is {large_num % factor == 0},")
     print(

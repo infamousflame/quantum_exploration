@@ -2,7 +2,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#   "ket-lang"
+#   "ket-lang",
 # ]
 # ///
 
@@ -38,7 +38,10 @@ def find_order(x: int, n: int) -> int | None:
     xor_oracle(lambda e: pow(x, e, n))(exponent, target)
     _ = measure(target)
     QFT(exponent)
-    return measure(exponent).value
+    order: int = measure(exponent).value
+    print(f"Quantum order found: {x}^{order} mod {n} = 1, which is {pow(x, order, n) == 1}.")
+    return order
+
 
 def is_perfect_power(n: int) -> int | None:
     """Checks if n is a perfect power.
