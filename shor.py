@@ -8,12 +8,13 @@
 
 """The real Shor's algorithm."""
 
+from fractions import Fraction
 from math import gcd
 from random import randint
 
 from ket import (
     Process, Quant,
-    H, QFT, measure,
+    H, QFT, measure, sample,
 )
 from ket.qulib.oracle import xor_oracle
 
@@ -26,7 +27,7 @@ def find_order(x: int, n: int) -> int | None:
         n (int): The modulus.
 
     Returns:
-        int: The order of x modulo n.
+        int | None: The order of x modulo n, or None if no order is found.
     """
     l: int = n.bit_length()
     t: int = 2 * l + 3
@@ -38,9 +39,15 @@ def find_order(x: int, n: int) -> int | None:
     xor_oracle(lambda e: pow(x, e, n))(exponent, target)
     _ = measure(target)
     QFT(exponent)
-    order: int = measure(exponent).value
-    print(f"Quantum order found: {x}^{order} mod {n} = 1, which is {pow(x, order, n) == 1}.")
-    return order
+    values: int = sample(exponent).value
+    for y in values:
+        if y == 0:
+            continue
+        fraction: Fraction = Fraction(y, 1 << t).limit_denominator(n)
+        order: int = fraction.denominator
+        if order > 0 and pow(x, order, n) == 1:
+            return order
+    return None
 
 
 def is_perfect_power(n: int) -> int | None:
@@ -66,7 +73,7 @@ def is_perfect_power(n: int) -> int | None:
     return None
 
 
-def shor(n: int, max_attempts: int = 100) -> int:
+def shor(n: int, max_attempts: int = 1) -> int:
     """Factors an integer using Shor's algorithm.
 
     Args:
