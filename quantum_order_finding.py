@@ -33,7 +33,7 @@ def find_order(x: int, n: int) -> int | None:
     exponent: Quant = process.alloc(t)
     target: Quant = process.alloc(l)
 
-    H(exponent)
+    H(exponent[:l])
     xor_oracle(lambda e: pow(x, e, n))(exponent, target)
     _ = measure(target)
     QFT(exponent)
