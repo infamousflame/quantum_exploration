@@ -30,7 +30,7 @@ def find_order(x: int, n: int) -> int | None:
         int | None: The order of x modulo n, or None if no order is found.
     """
     l: int = n.bit_length()
-    t: int = 2 * l + 3
+    t: int = (l << 1) + 3
     process: Process = Process()
     exponent: Quant = process.alloc(t)
     target: Quant = process.alloc(l)
