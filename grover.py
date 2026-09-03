@@ -11,7 +11,7 @@ from typing import Callable, Iterator
 
 from ket import (
     Process, Quant,
-    H, X, ctrl, measure,
+    CZ, H, X, measure,
 )
 
 
@@ -22,23 +22,13 @@ def bit_iter(target: int) -> Iterator[bool]:
         mask >>= 1
 
 
-def big_Z(qubits: Quant) -> None:
-    *controls, target = qubits
-    H(target)
-    if controls:
-        ctrl(controls, X)(target)
-    else:
-        X(target)
-    H(target)
-
-
 def phase_oracle(target: int) -> Callable[[Quant], None]:
     def _phase_oracle(qubits: Quant) -> None:
         for qubit, bit in zip(qubits, bit_iter(target)):
             if not bit:
                 X(qubit)
 
-        big_Z(qubits)
+        CZ(qubits)
 
         for qubit, bit in zip(qubits, bit_iter(target)):
             if not bit:
@@ -50,7 +40,7 @@ def phase_oracle(target: int) -> Callable[[Quant], None]:
 def diffuser(qubits: Quant) -> None:
     H(qubits)
     X(qubits)
-    big_Z(qubits)
+    CZ(qubits)
     X(qubits)
     H(qubits)
 
