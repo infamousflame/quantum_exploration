@@ -12,7 +12,7 @@ from fractions import Fraction
 
 from ket import (
     Process, Quant,
-    H, QFT, measure, sample,
+    H, QFT, X, sample,
 )
 from ket.qulib.oracle import xor_oracle
 
@@ -28,14 +28,14 @@ def find_order(x: int, n: int) -> int | None:
         int | None: The order of x modulo n, or None if no order is found.
     """
     l: int = n.bit_length()
-    t: int = (l << 1) + 3
+    t: int = l << 1
     process: Process = Process()
     exponent: Quant = process.alloc(t)
     target: Quant = process.alloc(l)
 
     H(exponent[:l])
+    X(target[0])
     xor_oracle(lambda e: pow(x, e, n))(exponent, target)
-    _ = measure(target)
     QFT(exponent)
     values: int = sample(exponent).value
     for y in values:
